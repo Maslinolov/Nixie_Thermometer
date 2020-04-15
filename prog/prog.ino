@@ -1,8 +1,8 @@
 //#include <avr/power.h>
 //#include <avr/sleep.h>
 //#include <avr/interrupt.h>
-/*#include <OneWire.h>
-#include <DallasTemperature.h>*/
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 #define X0 3
 #define X1 6
@@ -12,9 +12,9 @@
 #define PntL 1
 #define PntR 17
 
-#define Frst 15
+#define Frst 0
 #define Scnd 16
-#define Thrd 0
+#define Thrd 15
 
 #define Btn 2
 
@@ -22,7 +22,7 @@
 
 #define PWM_pin 9
 
-int temp = 225;
+int temp = 0;
 int ShwnTm = 120;
 int Shw = 0;                     
 int btn = 0;
@@ -30,10 +30,11 @@ bool slp = false;
 
 int FrstL = 0, ScndL = 0, ThrdL = 0;
 
-/*long lastUpdateTime = 0;
+long lastUpdateTime = 0;
 const int TEMP_UPDATE_TIME = 1000;
 OneWire DS0(DS_Sens);
-DallasTemperature TempSensor(&DS0);*/
+DallasTemperature TempSensor(&DS0);
+bool Chk = false;
 
 
 void setup() {
@@ -55,14 +56,14 @@ TCCR1B = 0b00000001;
   pinMode(ConvVCC, OUTPUT);  
   pinMode(PWM_pin, OUTPUT);  
 
- analogWrite(PWM_pin, 150);
+ analogWrite(PWM_pin, 170);
  digitalWrite(ConvVCC, HIGH);
  digitalWrite(Frst, HIGH); 
- digitalWrite(Scnd, HIGH); 
- digitalWrite(Thrd, HIGH);  
+ digitalWrite(Scnd, LOW); 
+ digitalWrite(Thrd, LOW);  
  
-/*  TempSensor.begin();
-  TempSensor.setResolution(12);*/
+  TempSensor.begin();
+  TempSensor.setResolution(10);
   
   //set_sleep_mode(SLEEP_MODE_PWR_SAVE);
   //sleep_enable();
@@ -139,76 +140,77 @@ void TEMP(int a = 0){
     {
       digitalWrite(Frst, HIGH);
       tabl(FrstL);
-      delay(4); 
+      delay(2); 
       digitalWrite(Frst, LOW);
-      delay(4);  
+      delay(2);  
              
       digitalWrite(Scnd, HIGH);
+      if(Chk == false)
+        digitalWrite(PntR, HIGH);
       tabl(ScndL);
-      delay(4); 
+      delay(2); 
       digitalWrite(Scnd, LOW);
-      delay(4); 
+      if(Chk == false)
+        digitalWrite(PntR, LOW);
+      delay(2); 
       
       digitalWrite(Thrd, HIGH);
+      if(Chk == true)
+        digitalWrite(PntR, HIGH);
       tabl(ThrdL);
-      delay(4); 
+      delay(2); 
       digitalWrite(Thrd, LOW);
-      delay(4); 
+      if(Chk == true)
+        digitalWrite(PntR, LOW);
+      delay(2); 
     } 
 }
 
 /*void ButInter(){    
     btn++;   
   }*/
-int i = 0;
+
 void loop() { 
 
   /*if(slp){     
     sleep_mode();
     slp = false;
   }  */
- /* if(millis() - lastUpdateTime > TEMP_UPDATE_TIME){
+  if(millis() - lastUpdateTime > TEMP_UPDATE_TIME){
     lastUpdateTime = millis();
     TempSensor.requestTemperatures();
-    float a = 0;
-  // a.getTempCByIndex(0);
-    temp = a * 10;
-  }*/
- /* FrstL = temp / 100;
+    float a = TempSensor.getTempCByIndex(0);
+    if(a >= 100){
+      temp = a;
+      Chk = true;
+    }
+    else{
+      temp = a * 10;
+      Chk = false;
+    }
+  }
+  FrstL = temp / 100;
   ScndL = (temp % 100)/10;
   ThrdL = temp % 10;
-  if(Shw == 0){    
+
+ /* if(Shw == 0){    
     
     digitalWrite(ConvVCC, HIGH);          
     analogWrite(PWM_pin, 155); // Переменная ШИМ
-    delay(500);       
-    digitalWrite(Frst, HIGH);
-    digitalWrite(Scnd, HIGH);
-    digitalWrite(Thrd, HIGH);
-    for(int p = 0; p < 10; p++){
-      tabl(p); 
-      delay(200); 
-    }    
-    digitalWrite(Frst, LOW);
-    digitalWrite(Scnd, LOW);
-    digitalWrite(Thrd, LOW);            
-  }      
+    delay(500);     
+       
+  }  */    
 
-  if(Shw == 1){             
+ // if(Shw == 1){             
     TEMP(ShwnTm);    
     /*analogWrite(5, 0);
     digitalWrite(0, LOW); 
     TmShw = 0; 
     Chk = false; 
     btn = 0; 
-    sleep_mode();  
-  } */
+    sleep_mode();  */
+ // } 
 
-  if(i == 10)
-    i = 0;
-   tabl(i);
-   i++;
-  delay(500);
  
 }
  
