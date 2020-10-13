@@ -169,7 +169,7 @@ void TEMP(int a = 0){
 /*void ButInter(){    
     btn++;   
   }*/
-
+int o = 0;
 void loop() { 
 
   /*if(slp){     
@@ -199,7 +199,7 @@ void loop() {
     analogWrite(PWM_pin, 155); // Переменная ШИМ
     delay(500);     
        
-  }  */    
+  }  */     
 
  // if(Shw == 1){             
     TEMP(ShwnTm);    
