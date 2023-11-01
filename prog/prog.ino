@@ -43,8 +43,8 @@ void setup() {
   power_twi_disable();  */
  // attachInterrupt(Btn, ButInter, RISING); 
   
-TCCR1A = 0b00000001;  // 8bit
-TCCR1B = 0b00000001;
+  TCCR1A = 0b00000001;  // 8bit
+  TCCR1B = 0b00000001;
   pinMode(Frst, OUTPUT);  
   pinMode(Scnd, OUTPUT);
   pinMode(Thrd, OUTPUT);

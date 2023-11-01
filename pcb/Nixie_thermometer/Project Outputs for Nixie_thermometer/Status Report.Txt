@@ -1,0 +1,15 @@
+Output: Gerber X2 Files
+Type  : GerberX2
+From  : Project [Nixie_thermometer.PrjPcb]
+   Generated File[PCB1PCB1_Copper_Signal_Top.gbr]
+   Generated File[PCB1PCB1_Mechanical_1.gbr]
+   Generated File[PCB1PCB1_PTH_Drill.gbr]
+   Generated File[PCB1.RUL]
+   Generated File[PCB1.EXTREP]
+   Generated File[PCB1.REP]
+
+
+Files Generated   : 6
+Documents Printed : 0
+
+Finished Output Generation At 11:58:00 On 02.11.2020
